@@ -1,18 +1,17 @@
 version: '3'
 
 services:
-  backend:
-    build: .
-    ports:
-      - "8000:8000"
-    restart: always
+#  backend:
+#    build: .
+#    ports:
+#      - "8000:8000"
+#    restart: always
   db:
     image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
-      POSTGRES_DB: nimbler
     ports:
       - "5432:5432"
     volumes:
