@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, datetime
 from database import Base
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -8,7 +9,7 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(unique=True)
+    name: Mapped[str] = mapped_column(unique=True)
     phone: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
@@ -28,13 +29,15 @@ class Order(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     address: Mapped[str] = mapped_column(ForeignKey("user_address.address"))
-    date: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now)
+    date: Mapped[datetime] = mapped_column(default=datetime.datetime.now)
 
 class OrdersItems(Base): 
 
     __tablename__ = "orders_items"
 
-    order_id: Mapped[int] = mapped_column(ForeignKey("orders.id"))
+    order_id: Mapped[int] = mapped_column(ForeignKey("orders.id"), primary_key=True)
+    item_size_color_id: Mapped[int] = mapped_column(ForeignKey("items_sizes_colors_availability.part_number"), primary_key=True)
+
     
 
 class Size(Base): 

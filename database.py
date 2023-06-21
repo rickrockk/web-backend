@@ -1,6 +1,7 @@
 import asyncpg
 import sqlalchemy.dialects.postgresql
 from sqlalchemy import Select, Insert, Delete, Update
+from sqlalchemy.orm import DeclarativeBase
 
 from config import Config
 from loguru import logger
