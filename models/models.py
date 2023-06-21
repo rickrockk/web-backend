@@ -48,7 +48,7 @@ class Colors(Base):
 
     __tablename__ = "colors"
 
-    name: Mapped[str(30)] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50), primary_key=True)
 
 
 class Item(Base):
@@ -56,7 +56,7 @@ class Item(Base):
     __tablename__ = "items"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str(50)] = mapped_column()
+    name: Mapped[str] = mapped_column(String(50))
     description: Mapped[str] = mapped_column()
 
 
@@ -67,7 +67,7 @@ class ItemSizeColorAvailability(Base):
     part_number: Mapped[int] = mapped_column(primary_key=True)
     item_id: Mapped[int] = mapped_column(ForeignKey("items.id"))
     size: Mapped[int] = mapped_column(ForeignKey("sizes.rus_size"))
-    color: Mapped[str(30)] = mapped_column(ForeignKey("colors.name"))
+    color: Mapped[str] = mapped_column(String(30), ForeignKey("colors.name"))
     price: Mapped[float] = mapped_column(default=0)
     is_available: Mapped[bool] = mapped_column(default=False)
     
