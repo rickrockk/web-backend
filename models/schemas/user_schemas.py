@@ -2,16 +2,19 @@ from pydantic import BaseModel
 from datetime import datetime
 
 class UserCreate(BaseModel):
+    id: int
     name: str
     phone: str
     email: str
     password: str
 
 class UserAddressCreate(BaseModel):
+    id: int
     user_id: int
     address: str
 
 class OrderCreate(BaseModel):
+    id: int
     address: str
     data: datetime
 
