@@ -33,22 +33,13 @@ class ItemsColorSizeAvailability(BaseModel):
 
 # Schemas
 
-
-class ItemsDetailSchema(BaseModel):
-    id: int
-    name: str
-    description: str
-    options: list[ItemsColorSizeAvailability]
-    category: str
-
-
 class ItemsListSchema(BaseModel):
     id: int
     name: str
     category: str
 
 
-class ItemCreateSchema(BaseModel):
+class ItemDetailSchema(BaseModel):
     item: Item
     options: list[ItemsColorSizeAvailability]
 

@@ -22,7 +22,7 @@ class BaseStorage:
         return response_model.parse_obj(item_raw)
 
     @classmethod
-    async def retrieve_many(cls, query: SQL, response_model: Type[T], error_msg: str = None) -> list[Type[T]]:
+    async def retrieve_many(cls, query: SQL, response_model: T, error_msg: str = None) -> list[Type[T]]:
         if error_msg is None:
             error_msg = "Not found"
         items = await cls.db.fetch(query)

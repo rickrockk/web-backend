@@ -3,7 +3,7 @@ from typing import Type
 from .base_storage import BaseStorage
 from fastapi import Depends, HTTPException
 from ..auth.oauth_scheme import oauth2_scheme
-from models.schemas.shoes_schemas import Item, ItemCreateSchema, Category, ItemsColorSizeAvailability
+from models.schemas.shoes_schemas import Item, ItemDetailSchema, Category, ItemsColorSizeAvailability
 from sqlalchemy import Select, Insert, Update, Delete
 from models.models import Item as ItemOrm, Categories as CategoryOrm, ItemSizeColorAvailability as OptionsOrm
 
@@ -28,11 +28,11 @@ class ItemStorage(BaseStorage):
         return await cls.retrieve_category(sql)
 
     @classmethod
-    async def create_item(cls, item: ItemCreateSchema) -> ItemCreateResponseSchema:
+    async def create_item(cls, item: ItemDetailSchema) -> ItemDetailSchema:
         options = item.options
 
         sql = Insert(ItemOrm).values(**(item.item.dict(exclude_none=True))
-        ).returning(ItemOrm)
+                                     ).returning(ItemOrm)
 
         item.item = await cls.retrieve_item(sql)
 
@@ -42,14 +42,17 @@ class ItemStorage(BaseStorage):
             options_data.append(await cls.retrieve_option(sql))
 
         item.options = options_data
-        return Item
+        return item
 
     @classmethod
-    async def get_item_via_id(cls, item_id: int):
+    async def get_item_detail(cls, item_id: int) -> ItemDetailSchema:
         sql = Select(ItemOrm).where(ItemOrm.id == item_id)
-        return await cls.retrieve_item(sql)
+        item = await cls.retrieve_item(sql)
+        options_sql = Select(OptionsOrm).where(OptionsOrm.item_id == item_id)
+        options = await cls.retrieve_many(options_sql, ItemsColorSizeAvailability)
+        return ItemDetailSchema(item=item, options=options)
 
-    @classmethod
-    async def get_item_via_name(cls, item_name: str):
-        sql = Select(ItemOrm).where(ItemOrm.name == item_name)
-        return await cls.retrieve_item(sql)
+    # @classmethod
+    # async def get_item_via_name(cls, item_name: str):
+    #     sql = Select(ItemOrm).where(ItemOrm.name == item_name)
+    #     return await cls.retrieve_item(sql)
