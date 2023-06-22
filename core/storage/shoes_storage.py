@@ -24,7 +24,7 @@ class ItemStorage(BaseStorage):
     
 
     @classmethod
-    async def get_user_via_id(cls, item_id: int):
+    async def get_item_via_id(cls, item_id: int):
         sql = Select(ItemOrm).where(ItemOrm.id == item_id)
         return await cls.retrieve_item(sql)
 
