@@ -62,3 +62,7 @@ class ItemOptionCreateSchema(BaseModel):
 class ItemDetailSchema(BaseModel):
     item: Item
     options: list[OptionSchema]
+
+
+class CreateCategorySchema(BaseModel):
+    name: str

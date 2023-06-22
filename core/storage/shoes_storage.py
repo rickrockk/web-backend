@@ -1,28 +1,40 @@
 from typing import Type
 
-from .base_storage import BaseStorage
+from .base_storage import BaseStorage, SQL
 from fastapi import Depends, HTTPException
 from ..auth.oauth_scheme import oauth2_scheme
 from models.schemas.shoes_schemas import Item, ItemDetailSchema, Category, OptionSchema, ItemsListSchema, \
-    ItemOptionCreateSchema
+    ItemOptionCreateSchema, CreateCategorySchema, Color, Size
 from sqlalchemy import Select, Insert, Update, Delete
 from sqlalchemy.orm import join
-from models.models import Item as ItemOrm, Categories as CategoryOrm, ItemSizeColorAvailability as OptionsOrm
+from models.models import Item as ItemOrm, \
+    Categories as CategoryOrm, \
+    ItemSizeColorAvailability as OptionsOrm, \
+    Colors as ColorsOrm, \
+    Size as SizesOrm
 
 
 class ItemStorage(BaseStorage):
 
     @classmethod
-    async def retrieve_item(cls, query: Select | Insert | Update | Delete) -> Item:
+    async def retrieve_item(cls, query: SQL) -> Item:
         return await cls.retrieve_row(query, Item, error_msg="Item not found error")
 
     @classmethod
-    async def retrieve_category(cls, query: Select | Insert | Update | Delete) -> Category:
+    async def retrieve_category(cls, query: SQL) -> Category:
         return await cls.retrieve_row(query, Category, error_msg='Category not found')
 
     @classmethod
-    async def retrieve_option(cls, query: Select | Insert | Update | Delete) -> OptionSchema:
+    async def retrieve_option(cls, query: SQL) -> OptionSchema:
         return await cls.retrieve_row(query, OptionSchema, error_msg='Item options not found')
+
+    @classmethod
+    async def retrieve_color(cls, query: SQL) -> Color:
+        return await cls.retrieve_row(query, Color, error_msg="Color not found")
+
+    @classmethod
+    async def retrieve_size(cls, query: SQL) -> Size:
+        return await cls.retrieve_row(query, Size, error_msg="Color is not found")
 
     @classmethod
     async def retrieve_category_via_id(cls, category_id: int):
@@ -76,7 +88,39 @@ class ItemStorage(BaseStorage):
             page * limit)
         return await cls.retrieve_many(sql, ItemsListSchema)
 
-    # @classmethod
-    # async def get_item_via_name(cls, item_name: str):
-    #     sql = Select(ItemOrm).where(ItemOrm.name == item_name)
-    #     return await cls.retrieve_item(sql)
+    # Categories
+
+    @classmethod
+    async def create_category(cls, category: CreateCategorySchema) -> Category:
+        sql = Insert(CategoryOrm).values(**category.dict(exclude_none=True)).returning(CategoryOrm)
+        return await cls.retrieve_category(sql)
+
+    @classmethod
+    async def list_categories(cls) -> list[Category]:
+        sql = Select(CategoryOrm)
+        return await cls.retrieve_many(sql, Category)
+
+    # Colors
+
+    @classmethod
+    async def list_colors(cls) -> list[Color]:
+        sql = Select(ColorsOrm)
+        return await cls.retrieve_many(sql, Color)
+
+    @classmethod
+    async def create_color(cls, color: Color) -> Color:
+        sql = Insert(ColorsOrm).values(**color.dict()).returning(ColorsOrm)
+        return await cls.retrieve_color(sql)
+
+    # Sizes
+
+    @classmethod
+    async def list_sizes(cls) -> list[Size]:
+        sql = Select(SizesOrm)
+        return await cls.retrieve_many(sql, Size)
+
+    @classmethod
+    async def create_size(cls, size: Size) -> Size:
+        sql = Insert(SizesOrm).values(**size.dict()).returning(SizesOrm)
+        return await cls.retrieve_size(sql)
+
