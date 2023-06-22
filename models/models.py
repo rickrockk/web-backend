@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 from database import Base
 from datetime import datetime
@@ -74,4 +74,4 @@ class ItemSizeColorAvailability(Base):
     color: Mapped[str] = mapped_column(String(30), ForeignKey("colors.name"))
     price: Mapped[float] = mapped_column(default=0)
     is_available: Mapped[bool] = mapped_column(default=False)
-    images: Mapped[list[str]] = mapped_column(default=False)
+    images: Mapped[list[str]] = mapped_column(ARRAY(String), default=False)
