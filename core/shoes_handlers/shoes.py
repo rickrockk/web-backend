@@ -1,25 +1,19 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Form
 
-from models.schemas.user_schemas import User
-from ..storage.user_storage import UserStorage
+from models.schemas.shoes_schemas import Item, ItemDetailSchema
+from ..storage.shoes_storage import ItemStorage
 
-# TODO А где эти модели ?
-# from app.api.models import ShoeCreate, ShoeUpdate, ShoeResponse
-# from app.core.auth.jwt import decode_access_token
-# from app.core.services.shoes import create_shoe, get_all_shoes, get_shoe, update_shoe, delete_shoe
-# from core.auth.auth import oauth2_scheme
 
 router = APIRouter(prefix='/api/shoes', tags=['Shoes'])
 
 
-@router.get("/")
-async def get_shoes():
-    user = User(name='ernest', phone='79024866500', email='ernest@el.tech', password="1234")
-    print(await UserStorage.create_user(user))
-    return 'ok'
-    pass
-    # shoes = get_all_shoes()
-    # return shoes
+@router.post('/create-shoe', response_model=Item)
+async def create_shoe(item: ItemDetailSchema):
+    return await ItemStorage.create_item(item)
+
+@router.get("/{item_id}", response_model=ItemDetailSchema)
+async def detail_shoe(item: ItemDetailSchema):
+    return await ItemStorage.get_item_detail(item)
 #
 #
 # @router.get("/{shoe_id}", response_model=ShoeResponse)
