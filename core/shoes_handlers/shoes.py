@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Form, Path
+from fastapi_cache.decorator import cache
 
 from models.schemas.shoes_schemas import Item, ItemDetailSchema, ItemsListSchema, ItemOptionCreateSchema, \
     CreateCategorySchema, Category, Size, Color
 from ..storage.shoes_storage import ItemStorage
+
 
 router = APIRouter(prefix='/api', tags=['Shoes'])
 
@@ -13,11 +15,13 @@ async def create_shoe(item: ItemOptionCreateSchema):
 
 
 @router.get('/shoes', response_model=list[ItemsListSchema])
+@cache(expire=60)
 async def list_items(items: list[ItemsListSchema] = Depends(ItemStorage.list_items)):
     return items
 
 
 @router.get("/shoes/{item_id}", response_model=ItemDetailSchema)
+@cache(expire=60)
 async def detail_shoe(item_id: int = Path()):
     return await ItemStorage.get_item_detail(item_id)
 
@@ -28,6 +32,7 @@ async def create_category(category: CreateCategorySchema):
 
 
 @router.get('/categories', response_model=list[Category])
+@cache(expire=60)
 async def list_categories():
     return await ItemStorage.list_categories()
 
@@ -38,6 +43,7 @@ async def create_sizes(size: Size):
 
 
 @router.get('/sizes', response_model=list[Size])
+@cache(expire=60)
 async def list_sizes():
     return await ItemStorage.list_sizes()
 
@@ -48,6 +54,7 @@ async def create_colors(color: Color):
 
 
 @router.get('/colors', response_model=list[Color])
+@cache(expire=60)
 async def list_colors():
     return await ItemStorage.list_colors()
 
