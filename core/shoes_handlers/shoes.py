@@ -1,20 +1,25 @@
-from fastapi import APIRouter, Depends, HTTPException, Form
+from fastapi import APIRouter, Depends, HTTPException, Form, Path
 
-from models.schemas.shoes_schemas import Item, ItemDetailSchema
+from models.schemas.shoes_schemas import Item, ItemDetailSchema, ItemsListSchema, ItemOptionCreateSchema
 from ..storage.shoes_storage import ItemStorage
-
 
 router = APIRouter(prefix='/api/shoes', tags=['Shoes'])
 
 
-@router.post('/create-shoe', response_model=Item)
-async def create_shoe(item: ItemDetailSchema):
+@router.post('/', response_model=ItemDetailSchema)
+async def create_shoe(item: ItemOptionCreateSchema):
     return await ItemStorage.create_item(item)
 
+
+@router.get('/', response_model=list[ItemsListSchema])
+async def list_items(items: list[ItemsListSchema] = Depends(ItemStorage.list_items)):
+    return items
+
+
 @router.get("/{item_id}", response_model=ItemDetailSchema)
-async def detail_shoe(item: ItemDetailSchema):
-    return await ItemStorage.get_item_detail(item)
-#
+async def detail_shoe(item_id: int = Path()):
+    return await ItemStorage.get_item_detail(item_id)
+
 #
 # @router.get("/{shoe_id}", response_model=ShoeResponse)
 # async def get_shoe_by_id(shoe_id: int):

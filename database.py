@@ -1,7 +1,7 @@
 import asyncpg
 from sqlalchemy import Select, Insert, Delete, Update
 from sqlalchemy.orm import DeclarativeBase
-
+from sqlalchemy.dialects import postgresql
 from config import Config
 from loguru import logger
 
@@ -30,19 +30,23 @@ class Database:
 
     async def execute(self, query: Select | Insert | Delete | Update):
         self.check_connection()
-        return await self.__connection.execute(str(query.compile(compile_kwargs={"literal_binds": True})))
+        return await self.__connection.execute(
+            str(query.compile(compile_kwargs={"literal_binds": True}, dialect=postgresql.dialect())))
 
     async def fetch(self, query: Select | Insert | Delete | Update):
         self.check_connection()
-        return await self.__connection.fetch(str(query.compile(compile_kwargs={"literal_binds": True})))
+        return await self.__connection.fetch(
+            str(query.compile(compile_kwargs={"literal_binds": True}, dialect=postgresql.dialect())))
 
     async def fetch_val(self, query: Select | Insert | Delete | Update):
         self.check_connection()
-        return await self.__connection.fetchval(str(query.compile(compile_kwargs={"literal_binds": True})))
+        return await self.__connection.fetchval(
+            str(query.compile(compile_kwargs={"literal_binds": True}, dialect=postgresql.dialect())))
 
     async def fetch_row(self, query: Select | Insert | Delete | Update):
         self.check_connection()
-        return await self.__connection.fetchrow(str(query.compile(compile_kwargs={"literal_binds": True})))
+        return await self.__connection.fetchrow(
+            str(query.compile(compile_kwargs={"literal_binds": True}, dialect=postgresql.dialect())))
 
 
 database = Database()

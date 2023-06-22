@@ -7,6 +7,8 @@ class User(BaseModel):
     name: str
     phone: str
     email: EmailStr
+    is_admin: bool
+    vk_id: int | None = None
     password: str
 
 
@@ -21,5 +23,4 @@ class UserAddress(BaseModel):
     id: int
     user_id: int
     address: str
-
 

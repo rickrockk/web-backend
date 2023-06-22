@@ -21,17 +21,32 @@ class Item(BaseModel):
     category_id: int
 
 
-class ItemsColorSizeAvailability(BaseModel):
+class OptionSchema(BaseModel):
     part_number: int
-    item_id: int
+    item_id: int | None = None
     size: int
     color: str
     price: float
     is_available: bool
-    images: list[str] = []
+    images: list[str] | None = None
 
 
 # Schemas
+
+class ItemCreateSchema(BaseModel):
+    name: str
+    description: str
+    category_id: int
+
+
+class OptionCreateSchema(BaseModel):
+    part_number: int
+    size: int
+    color: str
+    price: float
+    is_available: bool
+    images: list[str] | None = None
+
 
 class ItemsListSchema(BaseModel):
     id: int
@@ -39,7 +54,11 @@ class ItemsListSchema(BaseModel):
     category: str
 
 
+class ItemOptionCreateSchema(BaseModel):
+    item: ItemCreateSchema
+    options: list[OptionCreateSchema]
+
+
 class ItemDetailSchema(BaseModel):
     item: Item
-    options: list[ItemsColorSizeAvailability]
-
+    options: list[OptionSchema]

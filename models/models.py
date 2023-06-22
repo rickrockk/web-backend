@@ -11,6 +11,8 @@ class User(Base):
     name: Mapped[str] = mapped_column(unique=True)
     phone: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
+    vk_id: Mapped[int]
+    is_admin: Mapped[bool]
     password: Mapped[str]
 
 
@@ -74,4 +76,4 @@ class ItemSizeColorAvailability(Base):
     color: Mapped[str] = mapped_column(String(30), ForeignKey("colors.name"))
     price: Mapped[float] = mapped_column(default=0)
     is_available: Mapped[bool] = mapped_column(default=False)
-    images: Mapped[list[str]] = mapped_column(ARRAY(String), default=False)
+    images: Mapped[list[str]] = mapped_column(ARRAY(String), )
