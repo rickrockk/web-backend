@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends
 
+
+# TODO А где эти модели ?
 from app.api.models import ShoeCreate, ShoeUpdate, ShoeResponse
 from app.core.auth.jwt import decode_access_token
 from app.core.services.shoes import create_shoe, get_all_shoes, get_shoe, update_shoe, delete_shoe
