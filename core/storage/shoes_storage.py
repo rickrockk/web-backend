@@ -3,8 +3,7 @@ from typing import Type
 from .base_storage import BaseStorage
 from fastapi import Depends, HTTPException
 from ..auth.oauth_scheme import oauth2_scheme
-from models.schemas.shoes_schemas import Item, ItemCreateSchema, Category, ItemsColorSizeAvailability, \
-    ItemCreateResponseSchema
+from models.schemas.shoes_schemas import Item, ItemCreateSchema, Category, ItemsColorSizeAvailability
 from sqlalchemy import Select, Insert, Update, Delete
 from models.models import Item as ItemOrm, Categories as CategoryOrm, ItemSizeColorAvailability as OptionsOrm
 
