@@ -1,5 +1,4 @@
 import asyncpg
-import sqlalchemy.dialects.postgresql
 from sqlalchemy import Select, Insert, Delete, Update
 
 from config import Config
@@ -28,9 +27,17 @@ class Database:
         self.check_connection()
         return await self.__connection.execute(str(query.compile(compile_kwargs={"literal_binds": True})))
 
-    async def fetch(self, query: Select):
+    async def fetch(self, query: Select | Insert | Delete | Update):
         self.check_connection()
         return await self.__connection.fetch(str(query.compile(compile_kwargs={"literal_binds": True})))
+
+    async def fetch_val(self, query: Select | Insert | Delete | Update):
+        self.check_connection()
+        return await self.__connection.fetchval(str(query.compile(compile_kwargs={"literal_binds": True})))
+
+    async def fetch_row(self, query: Select | Insert | Delete | Update):
+        self.check_connection()
+        return await self.__connection.fetchrow(str(query.compile()))
 
 
 database = Database()
