@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
 
@@ -7,6 +7,13 @@ class User(BaseModel):
     name: str
     phone: str
     email: EmailStr
+    password: str
+
+
+class UserRegisterSchema(BaseModel):
+    name: str
+    phone: str
+    email: str
     password: str
 
 

@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends
+
+from models.schemas.user_schemas import User
 from ..storage.user_storage import UserStorage
 
 # TODO А где эти модели ?
@@ -7,11 +9,13 @@ from ..storage.user_storage import UserStorage
 # from app.core.services.shoes import create_shoe, get_all_shoes, get_shoe, update_shoe, delete_shoe
 # from core.auth.auth import oauth2_scheme
 
-router = APIRouter(prefix='/api/shoes')
+router = APIRouter(prefix='/api/shoes', tags=['Shoes'])
 
 
 @router.get("/")
-async def get_shoes(user=Depends(UserStorage.get_current_user_via_token)):
+async def get_shoes():
+    user = User(name='ernest', phone='79024866500', email='ernest@el.tech', password="1234")
+    print(await UserStorage.create_user(user))
     return 'ok'
     pass
     # shoes = get_all_shoes()

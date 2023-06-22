@@ -1,7 +1,7 @@
 from .base_storage import BaseStorage
 from fastapi import Depends, HTTPException
-from ..auth.auth import oauth2_scheme
-from models.schemas.user_schemas import User
+from ..auth.oauth_scheme import oauth2_scheme
+from models.schemas.user_schemas import User, UserRegisterSchema
 from sqlalchemy import Select, Insert, Update, Delete
 from sqlalchemy.sql.functions import count
 from models.models import User as UserOrm
@@ -28,7 +28,7 @@ class UserStorage(BaseStorage):
         return await cls.db.fetch_val(sql)
 
     @classmethod
-    async def create_user(cls, user: User) -> User:
+    async def create_user(cls, user: UserRegisterSchema) -> User:
         if await cls.check_unique_email(user.email) != 0 or await cls.check_unique_phone(user.phone) != 0:
             raise HTTPException(status_code=422, detail="Not unique phone or email")
         user.password = get_password_hash(user.password)

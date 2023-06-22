@@ -1,22 +1,24 @@
 from fastapi import APIRouter, Depends, HTTPException, Form
-from fastapi.security import OAuth2PasswordBearer
+
+from models.schemas.user_schemas import UserRegisterSchema, User
 from .jwt import create_access_token
+from core.storage.user_storage import UserStorage
 
 # Ouath2
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
-router = APIRouter(prefix='/api/auth')
+router = APIRouter(prefix='/api/auth', tags=['Auth'])
 
 
-# TODO Поменять на multipart form data
 @router.post("/token")
-async def login(username: str = Form(), password: str = Form()):
-    # TODO make Storage service with loging user
-    #   Здесь должна быть ваша логика проверки учетных данных (например, валидация пользователя в базе данных)
-    #   В данном примере проверяем пароль "password" для примера
-    #    if password != "password":
-    #       raise HTTPException(status_code=400, detail="Incorrect username or password")
+async def login(phone: str = Form(alias='username'), password: str = Form()):
+    user = await UserStorage.get_user_via_phone_number(phone)
+    user = await UserStorage.login_user(user, password)
 
     # Генерация access токена
-    access_token = create_access_token(data={"sub": username})
+    access_token = create_access_token(data={"sub": user.phone})
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post('/sign-up', response_model=User)
+async def register_user(user: UserRegisterSchema):
+    return await UserStorage.create_user(user)
