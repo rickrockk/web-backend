@@ -1,5 +1,4 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from database import Base
 from datetime import datetime
@@ -28,7 +27,7 @@ class Order(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     address: Mapped[str] = mapped_column(ForeignKey("user_address.address"))
-    date: Mapped[datetime] = mapped_column(default=datetime.datetime.now)
+    date: Mapped[datetime] = mapped_column(default=datetime.now)
 
 
 class OrdersItems(Base):

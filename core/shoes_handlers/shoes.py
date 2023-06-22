@@ -1,19 +1,21 @@
 from fastapi import APIRouter, Depends
-
+from ..storage.user_storage import UserStorage
 
 # TODO А где эти модели ?
 # from app.api.models import ShoeCreate, ShoeUpdate, ShoeResponse
 # from app.core.auth.jwt import decode_access_token
 # from app.core.services.shoes import create_shoe, get_all_shoes, get_shoe, update_shoe, delete_shoe
+# from core.auth.auth import oauth2_scheme
 
-router = APIRouter(prefix='api/shoes')
+router = APIRouter(prefix='/api/shoes')
 
 
-# @router.get("/", response_model=list[ShoeResponse])
-# async def get_shoes():
-#     pass
-#     # shoes = get_all_shoes()
-#     # return shoes
+@router.get("/")
+async def get_shoes(user=Depends(UserStorage.get_current_user_via_token)):
+    return 'ok'
+    pass
+    # shoes = get_all_shoes()
+    # return shoes
 #
 #
 # @router.get("/{shoe_id}", response_model=ShoeResponse)

@@ -1,39 +1,47 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-class UserCreate(BaseModel):
+
+class User(BaseModel):
     id: int
     name: str
     phone: str
     email: str
     password: str
 
-class UserAddressCreate(BaseModel):
+
+class UserAddress(BaseModel):
     id: int
     user_id: int
     address: str
 
-class OrderCreate(BaseModel):
+
+class Order(BaseModel):
     id: int
     address: str
     data: datetime
 
-class OrderItemsCreate(BaseModel):
+
+class OrderItems(BaseModel):
     order_id: int
     item_size_color_id: int
 
-class SizeCreate(BaseModel): 
+
+class Size(BaseModel):
     rus_size: int
 
-class ColorCreate(BaseModel):
-    name: str(30)
+
+class Color(BaseModel):
+    name: str
+
 
 class ItemCreate(BaseModel):
     id: int
-    name: str(50)
+    name: str
     description: str
 
-class ItemsColorSizeAvailabilityCreate(BaseModel): 
+
+class ItemsColorSizeAvailability(BaseModel):
     part_number: int
     item_id: int
     size: int

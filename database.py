@@ -40,7 +40,7 @@ class Database:
 
     async def fetch_row(self, query: Select | Insert | Delete | Update):
         self.check_connection()
-        return await self.__connection.fetchrow(str(query.compile()))
+        return await self.__connection.fetchrow(str(query.compile(compile_kwargs={"literal_binds": True})))
 
 
 database = Database()
