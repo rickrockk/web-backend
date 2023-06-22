@@ -10,12 +10,13 @@ from database import connect_database
 # routers
 from core.auth.auth import router as auth_router
 from core.shoes_handlers.shoes import router as shoes_router
-
+from core.vk_auth.vk_auth import router as vk_auth_router
 app = FastAPI()
 
 # Including routers
 app.include_router(auth_router)
 app.include_router(shoes_router)
+app.include_router(vk_auth_router)
 
 
 @app.on_event('startup')

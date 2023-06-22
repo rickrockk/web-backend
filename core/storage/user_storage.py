@@ -1,7 +1,7 @@
 from .base_storage import BaseStorage
 from fastapi import Depends, HTTPException
 from ..auth.oauth_scheme import oauth2_scheme
-from models.schemas.user_schemas import User, UserRegisterSchema
+from models.schemas.user_schemas import User, UserRegisterSchema, UserRegisterVkSchema
 from sqlalchemy import Select, Insert, Update, Delete
 from sqlalchemy.sql.functions import count
 from models.models import User as UserOrm
@@ -33,7 +33,21 @@ class UserStorage(BaseStorage):
         return await cls.retrieve_user(sql)
 
     @classmethod
-    async def get_user_via_id(cls, user_id: int):
+    async def get_or_create_user_via_vk(cls, user: UserRegisterVkSchema) -> User:
+        sql = Select(count(UserOrm)).where(UserOrm.vk_id == user.vk_id)
+        if await cls.db.fetch_val(sql) == 0:
+            sql = Insert(UserOrm).values(**user.dict()).returning(UserOrm)
+            return await cls.retrieve_user(sql)
+
+        return await cls.get_user_via_vk_id(user.vk_id)
+
+    @classmethod
+    async def get_user_via_vk_id(cls, vk_id: int) -> User:
+        sql = Select(UserOrm).where(UserOrm.vk_id == vk_id)
+        return await cls.retrieve_user(sql)
+
+    @classmethod
+    async def get_user_via_id(cls, user_id: int) -> User:
         sql = Select(UserOrm).where(UserOrm.id == user_id)
         return await cls.retrieve_user(sql)
 
@@ -56,8 +70,13 @@ class UserStorage(BaseStorage):
     @classmethod
     async def get_current_user_via_token(cls, token: str = Depends(oauth2_scheme)) -> User:
         payload = decode_access_token(token)
-        phone = payload.get('sub')
-        if phone is None:
-            raise HTTPException(status_code=400, detail="Phone is not defined")
+        sub = payload.get('sub')
+        auth_type = payload.get('authType')
 
-        return await cls.get_user_via_phone_number(phone)
+        if sub is None or auth_type is None:
+            raise HTTPException(status_code=400, detail="Subject or authType is not defined")
+
+        if auth_type == 'website':
+            return await cls.get_user_via_phone_number(sub)
+        if auth_type == 'vk':
+            return await cls.get_user_via_vk_id(sub)

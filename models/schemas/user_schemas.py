@@ -5,11 +5,11 @@ from datetime import datetime
 class User(BaseModel):
     id: int | None = None
     name: str
-    phone: str
-    email: EmailStr
+    phone: str | None = None
+    email: EmailStr | None = None
     is_admin: bool
     vk_id: int | None = None
-    password: str
+    password: str | None = None
 
 
 class UserRegisterSchema(BaseModel):
@@ -17,6 +17,12 @@ class UserRegisterSchema(BaseModel):
     phone: str
     email: str
     password: str
+
+
+class UserRegisterVkSchema(BaseModel):
+    name: str
+    email: str
+    vk_id: int
 
 
 class UserAddress(BaseModel):

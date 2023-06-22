@@ -14,7 +14,7 @@ async def login(phone: str = Form(alias='username'), password: str = Form()):
     user = await UserStorage.login_user(user, password)
 
     # Генерация access токена
-    access_token = create_access_token(data={"sub": user.phone})
+    access_token = create_access_token(data={"sub": user.phone, "authType": "website"})
 
     return {"access_token": access_token, "token_type": "bearer"}
 

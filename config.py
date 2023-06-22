@@ -1,4 +1,4 @@
-from pydantic import BaseSettings, IPvAnyAddress, PostgresDsn, EmailStr
+from pydantic import BaseSettings, IPvAnyAddress, PostgresDsn, EmailStr, HttpUrl
 
 
 class Settings(BaseSettings):
@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     system_username: str = 'admin'
     system_pwd: str = 'admin'
     system_email: EmailStr = 'ernest@elitvinenko.tech'
+    vk_oauth_link: HttpUrl = 'https://oauth.vk.com/authorize'
+    vk_app_id: int
+    vk_secret_key: str
+    vk_service_key: str
+    vk_api_version: str
+    domain: str
 
     class Config:
         env_file = '.env'
