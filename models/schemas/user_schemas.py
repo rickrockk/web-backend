@@ -23,35 +23,3 @@ class UserAddress(BaseModel):
     address: str
 
 
-class Order(BaseModel):
-    id: int
-    address: str
-    data: datetime
-
-
-class OrderItems(BaseModel):
-    order_id: int
-    item_size_color_id: int
-
-
-class Size(BaseModel):
-    rus_size: int
-
-
-class Color(BaseModel):
-    name: str
-
-
-class ItemCreate(BaseModel):
-    id: int
-    name: str
-    description: str
-
-
-class ItemsColorSizeAvailability(BaseModel):
-    part_number: int
-    item_id: int
-    size: int
-    color: str
-    price: float
-    is_available: bool

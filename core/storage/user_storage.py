@@ -12,10 +12,7 @@ class UserStorage(BaseStorage):
 
     @classmethod
     async def retrieve_user(cls, query: Select | Insert | Update | Delete) -> User:
-        user_raw = await cls.db.fetch_row(query)
-        if user_raw is None:
-            raise HTTPException(status_code=400, detail="User not found error")
-        return User.parse_obj(user_raw)
+        return await cls.retrieve_row(query, User, error_msg="User not found error")
 
     @classmethod
     async def check_unique_email(cls, email: str) -> int:

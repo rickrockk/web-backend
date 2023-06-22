@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 from database import Base
 from datetime import datetime
@@ -50,12 +50,19 @@ class Colors(Base):
     name: Mapped[str] = mapped_column(String(50), primary_key=True)
 
 
+class Categories(Base):
+    __tablename__ = "categories"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+
+
 class Item(Base):
     __tablename__ = "items"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
-    description: Mapped[str] = mapped_column()
+    description: Mapped[str] = mapped_column(default=None)
+    category_id: Mapped[int]
 
 
 class ItemSizeColorAvailability(Base):
@@ -67,3 +74,4 @@ class ItemSizeColorAvailability(Base):
     color: Mapped[str] = mapped_column(String(30), ForeignKey("colors.name"))
     price: Mapped[float] = mapped_column(default=0)
     is_available: Mapped[bool] = mapped_column(default=False)
+    images: Mapped[list[str]] = mapped_column(ARRAY(String), default=False)
