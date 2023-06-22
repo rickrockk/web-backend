@@ -42,10 +42,17 @@ class Color(BaseModel):
     name: str
 
 
-class ItemCreate(BaseModel):
+class Item(BaseModel):
     id: int
     name: str
     description: str
+
+class ItemCreateSchema(BaseModel):
+    id: int
+    name: str
+    description: str
+
+
 
 
 class ItemsColorSizeAvailability(BaseModel):
