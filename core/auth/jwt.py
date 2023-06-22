@@ -8,6 +8,9 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from .jwt import decode_access_token
 
+
+# TODO Эти поля брать из модуля config.Config
+#    К примеру secret key брать из Config.secret
 SECRET_KEY = "your-secret-key"  # Секретный ключ для подписи JWT
 ALGORITHM = "HS256"  # Алгоритм шифрования
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Время жизни access токена
@@ -58,13 +61,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         username = payload.get("sub")
         if username is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-        # Здесь может быть ваша логика получения пользователя из базы данных или другого хранилища по имени пользователя (username)
-        # Пример:
-        # user = get_user_by_username(username)
-        # if user is None:
-        #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-        # return user
-        # В данном примере просто возвращаем имя пользователя
+        # TODO Здесь может быть ваша логика получения пользователя из базы данных или другого хранилища по имени пользователя (username)
+        #     Пример:
+        #     user = get_user_by_username(username)
+        #     if user is None:
+        #         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+        #     return user
+        #     В данном примере просто возвращаем имя пользователя
         return username
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
