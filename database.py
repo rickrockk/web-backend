@@ -1,9 +1,12 @@
 import asyncpg
 from sqlalchemy import Select, Insert, Delete, Update
+from sqlalchemy.orm import DeclarativeBase
 
 from config import Config
 from loguru import logger
 
+class Base(DeclarativeBase):
+    pass
 
 class Database:
     __instance: 'Database' = None
