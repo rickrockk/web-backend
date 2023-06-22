@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
-from app.core.auth.jwt import create_access_token
+from app.core.auth.jwt import create_access_token, get_current_user
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
@@ -20,6 +20,6 @@ async def login(username: str, password: str):
 
 
 @router.get("/protected")
-async def protected_route(token: str = Depends(oauth2_scheme)):
+async def protected_route(current_user: str = Depends(get_current_user)):
     # В этом эндпоинте вы можете разместить защищенную функциональность, к которой имеют доступ только аутентифицированные пользователи
-    return {"message": "Protected route", "token": token}
+    return {"message": "Protected route", "user": current_user}
