@@ -34,7 +34,7 @@ class UserStorage(BaseStorage):
 
     @classmethod
     async def get_or_create_user_via_vk(cls, user: UserRegisterVkSchema) -> User:
-        sql = Select(count(UserOrm)).where(UserOrm.vk_id == user.vk_id)
+        sql = Select(count(UserOrm.vk_id)).where(UserOrm.vk_id == user.vk_id)
         if await cls.db.fetch_val(sql) == 0:
             sql = Insert(UserOrm).values(**user.dict()).returning(UserOrm)
             return await cls.retrieve_user(sql)
