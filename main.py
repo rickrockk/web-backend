@@ -1,3 +1,4 @@
+import threading
 from datetime import datetime, timezone
 
 import uvicorn
@@ -6,11 +7,21 @@ from fastapi.security import OAuth2PasswordBearer
 from config import Config
 from loguru import logger
 from database import connect_database
-
+from config import Config
 # routers
+from fastapi import BackgroundTasks
 from core.auth.auth import router as auth_router
 from core.shoes_handlers.shoes import router as shoes_router
 from core.vk_auth.vk_auth import router as vk_auth_router
+from core.tasks.db_dump import DatabaseDump
+
+# Dumps
+db_dump = DatabaseDump()
+dump_thread = threading.Thread(target=db_dump.run_pending)
+dump_thread.daemon = True
+dump_thread.start()
+
+
 app = FastAPI()
 
 # Including routers
