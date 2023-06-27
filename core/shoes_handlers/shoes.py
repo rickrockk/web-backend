@@ -14,7 +14,7 @@ router = APIRouter(prefix='/api', tags=['Shoes'])
 
 
 @router.post('/shoes', response_model=ItemDetailSchema)
-async def create_shoe(item: ItemOptionCreateSchema, user: User):
+async def create_shoe(item: ItemOptionCreateSchema):
     return await ItemStorage.create_item(item)
 
 
