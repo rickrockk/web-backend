@@ -3,7 +3,11 @@ from fastapi_cache.decorator import cache
 
 from models.schemas.shoes_schemas import Item, ItemDetailSchema, ItemsListSchema, ItemOptionCreateSchema, \
     CreateCategorySchema, Category, Size, Color
+
+# from models.schemas.user_schemas import User
 from ..storage.shoes_storage import ItemStorage
+# from core.tasks.celery_worker import send_mail
+
 
 
 router = APIRouter(prefix='/api', tags=['Shoes'])
