@@ -58,12 +58,6 @@ class ItemOptionCreateSchema(BaseModel):
     item: ItemCreateSchema
     options: list[OptionCreateSchema]
 
-# class MailCreate(BaseModel):
-#     me: str
-#     to: str
-#     text: str
-#     subject: str
-
 
 class ItemDetailSchema(BaseModel):
     item: Item

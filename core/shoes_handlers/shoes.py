@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, Form, Path
+from fastapi import APIRouter, Depends, HTTPException, Form, Path, BackgroundTasks
 from fastapi_cache.decorator import cache
 
 from models.schemas.shoes_schemas import Item, ItemDetailSchema, ItemsListSchema, ItemOptionCreateSchema, \
     CreateCategorySchema, Category, Size, Color
 
-# from models.schemas.user_schemas import User
+from models.schemas.user_schemas import User
 from ..storage.shoes_storage import ItemStorage
-# from core.tasks.celery_worker import send_mail
+from core.tasks.celery_worker import send_mail
 
 
 
@@ -14,13 +14,14 @@ router = APIRouter(prefix='/api', tags=['Shoes'])
 
 
 @router.post('/shoes', response_model=ItemDetailSchema)
-async def create_shoe(item: ItemOptionCreateSchema):
+async def create_shoe(item: ItemOptionCreateSchema, user: User):
     return await ItemStorage.create_item(item)
 
 
 @router.get('/shoes', response_model=list[ItemsListSchema])
 @cache(expire=60)
 async def list_items(items: list[ItemsListSchema] = Depends(ItemStorage.list_items)):
+    send_mail.delay(me='hihihiha', to='azaza@mail.ru', text='azaza', subject='azaza')
     return items
 
 
