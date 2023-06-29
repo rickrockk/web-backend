@@ -3,7 +3,9 @@ from datetime import datetime, timezone
 
 import uvicorn
 from fastapi import FastAPI
-from fastapi.security import OAuth2PasswordBearer
+from starlette.middleware.base import BaseHTTPMiddleware
+
+
 from config import Config
 from loguru import logger
 from database import connect_database
@@ -14,6 +16,7 @@ from core.auth.auth import router as auth_router
 from core.shoes_handlers.shoes import router as shoes_router
 from core.vk_auth.vk_auth import router as vk_auth_router
 from core.tasks.db_dump import DatabaseDump
+from core.history_logger.middleware import user_history_middleware
 
 # Dumps
 db_dump = DatabaseDump()
@@ -28,6 +31,7 @@ app = FastAPI()
 app.include_router(auth_router)
 app.include_router(shoes_router)
 app.include_router(vk_auth_router)
+app.add_middleware(BaseHTTPMiddleware, dispatch=user_history_middleware)
 
 
 @app.on_event('startup')

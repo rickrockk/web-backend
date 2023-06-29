@@ -77,3 +77,11 @@ class ItemSizeColorAvailability(Base):
     price: Mapped[float] = mapped_column(default=0)
     is_available: Mapped[bool] = mapped_column(default=False)
     images: Mapped[list[str]] = mapped_column(ARRAY(String), )
+
+
+class UserHistory(Base):
+    __tablename__ = 'user_history'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    timestamp: Mapped[datetime]
+    url: Mapped[str] = mapped_column(default=None)
+    user_agent: Mapped[str | None] = mapped_column(default=None)
