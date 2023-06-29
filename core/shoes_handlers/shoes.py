@@ -6,7 +6,7 @@ from models.schemas.shoes_schemas import Item, ItemDetailSchema, ItemsListSchema
 
 from models.schemas.user_schemas import User
 from ..storage.shoes_storage import ItemStorage
-from core.tasks.celery_worker import send_mail
+from celery_worker import send_mail
 
 
 

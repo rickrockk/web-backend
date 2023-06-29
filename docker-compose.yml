@@ -1,5 +1,10 @@
 version: '3'
 
+networks:
+  dev:
+    name: dev
+    external: true
+
 services:
 #  backend:
 #    build: .
@@ -32,11 +37,15 @@ services:
     image: redis:6.2-alpine
     ports:
       - "6739:6739"
+    networks: 
+      - dev
 
   mail:
     image: mailhog/mailhog
     ports:
       - "8025:8025"
+    networks: 
+      - dev
     restart: always
   
   # tasks:
@@ -50,28 +59,32 @@ services:
 
   celery_worker:
     build: .
-    command: celery -A core.tasks.celery_worker.celery worker --loglevel=info
+    command: celery -A celery_worker.celery worker --loglevel=info
     volumes:
       - .:/app
+    networks: 
+      - dev
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://dev:6379/0
+      - CELERY_RESULT_BACKEND=redis://dev:6379/0
     depends_on:
       - app
       - redis
   
   flower:
     build: .
-    command: celery flower core.tasks.celery_worker.celery worker --port=5555
+    command: celery flower -A celery_worker --port=5555
     ports:
       - 5555:5555
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://dev:6379/0
+      - CELERY_RESULT_BACKEND=redis://dev:6379/0
     depends_on:
       - app
       - redis
       - celery_worker
+    networks: 
+      - dev
     restart: always
 
 volumes:
