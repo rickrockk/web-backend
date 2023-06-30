@@ -6,16 +6,23 @@ services:
 #    ports:
 #      - "8000:8000"
 #    restart: always
-  db:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: example
+#  db:
+#    image: postgres:latest
+#    restart: always
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: example
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres-data:/var/lib/postgresql/data
+
+  mail:
+    image: mailhog/mailhog
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - "8025:8025"
+      - "1025:1025"
+    restart: always
 
 volumes:
   postgres-data:
